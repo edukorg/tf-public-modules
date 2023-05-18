@@ -200,8 +200,12 @@ resource "kubernetes_ingress_v1" "ingress" {
       http {
         path {
           backend {
-            service_name = kubernetes_service.service[0].metadata[0].name
-            service_port = var.health_check.port
+            service {
+              name = kubernetes_service.service[0].metadata[0].name
+              port {
+                number = var.health_check.port
+              }
+            }
           }
         }
       }
