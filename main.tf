@@ -115,7 +115,7 @@ resource "kubernetes_deployment" "deployment" {
   }
 }
 
-resource "kubernetes_horizontal_pod_autoscaler" "this" {
+resource "kubernetes_horizontal_pod_autoscaler_v1" "this" {
   count = var.max_replicas > var.replicas ? 1 : 0
   metadata {
     name      = "${var.name}-autoscaler"
@@ -136,16 +136,7 @@ resource "kubernetes_horizontal_pod_autoscaler" "this" {
       name        = kubernetes_deployment.deployment.metadata.0.name
     }
 
-    metric {
-      type = "Resource"
-      resource {
-        name = "cpu"
-        target {
-          type                = "Utilization"
-          average_utilization = 80
-        }
-      }
-    }
+    target_cpu_utilization_percentage = 80
   }
 }
 
